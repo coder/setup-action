@@ -1,0 +1,31 @@
+name: Setup Coder
+description: An action to setup and configure Coder.
+author: "Coder Technologies Inc. <https://coder.com>"
+
+branding:
+  icon: arrow-down-circle
+  color: purple
+
+inputs:
+  access_url:
+    description: "Coder access URL (e.g. https://coder.example.com)"
+    required: true
+  coder_session_token:
+    description: "Coder session token"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download Coder binary from access URL
+      run: curl -fsSL $CODER_URL/bin/coder-linux-amd64 -o /usr/local/bin/coder && chmod +x /usr/local/bin/coder
+      shell: bash
+      env:
+        CODER_URL: ${{ inputs.access_url }}
+
+    - name: Login to Coder
+      run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
+      shell: bash
+      env:
+        CODER_URL: ${{ inputs.access_url }}
+        CODER_SESSION_TOKEN: ${{ inputs.coder_session_token }}
