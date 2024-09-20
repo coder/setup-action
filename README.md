@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Coder
-        uses: coder/setup-coder@v1
+        uses: coder/setup-action@v1
         with:
           access_url: 'https://dev.coder.com'
           coder_session_token: ${{ secrets.CODER_SESSION_TOKEN }}
