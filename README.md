@@ -9,9 +9,9 @@ You can generate a long lived session token by running the following command in
 your browser console while logged into Coder with a **Template Admin** or
 **Owner** role.
 
-    ```shell
-      coder token create --lifetime 8760h --name "GitHub Actions"
-    ```
+```shell
+  coder token create --lifetime 8760h --name "GitHub Actions"
+```
 
 ```yaml
 jobs:
