@@ -1,6 +1,6 @@
 # Setup [Coder](https://github.com/coder/coder)
 
-Downloads and authenticates Coder's CLI with your Coder server. This action can be used to run authenticated coder commands in GitHub action workflows.
+Downloads and authenticates Coder's CLI with your Coder server. This action can be used to run authenticated Coder commands in GitHub Action workflows.
 
 ## Usage
 
