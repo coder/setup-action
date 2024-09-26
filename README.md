@@ -21,13 +21,13 @@ jobs:
       - name: Setup Coder
         uses: coder/setup-action@v1
         with:
-          access_url: 'https://dev.coder.com'
+          access_url: 'https://coder.example.com'
           coder_session_token: ${{ secrets.CODER_SESSION_TOKEN }}
 ```
 
 ## Inputs
 
-| Name                      | Description                                                              | Default |
-| ------------------------- | ------------------------------------------------------------------------ | ------- |
-| **`access_url`**          | **Required** The url of coder deployment (e.g. <https://dev.coder.com>). | -       |
-| **`coder_session_token`** | **Required** The session token of coder.                                 | -       |
+| Name                      | Description                                                                   | Default |
+| ------------------------- | ----------------------------------------------------------------------------- | ------- |
+| **`access_url`**          | **Required** The url of coder deployment (e.g. <https://coder.example.com>).  | -       |
+| **`coder_session_token`** | **Required** The session token of coder.                                      | -       |
