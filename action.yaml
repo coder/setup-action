@@ -25,7 +25,7 @@ runs:
           ARCH="amd64"
         fi
         mkdir -p "$HOME"/.local/bin
-        curl -fsSL "$CODER_URL"/bin/coder-linux-${ARCH} -o "$HOME"/.local/bin/coder
+        curl -fsSL --compressed "$CODER_URL"/bin/coder-linux-${ARCH} -o "$HOME"/.local/bin/coder
         chmod +x "$HOME"/.local/bin/coder
         echo "$HOME/.local/bin" >> $GITHUB_PATH
         "$HOME"/.local/bin/coder version
