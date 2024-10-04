@@ -25,11 +25,13 @@ runs:
           ARCH="amd64"
         fi
         mkdir -p "$HOME"/.local/bin
-        curl -fsSL ${{ inputs.access_url }}/bin/coder-linux-${ARCH} -o $HOME/.local/bin/coder
-        chmod +x $HOME/.local/bin/coder
+        curl -fsSL "$CODER_URL"/bin/coder-linux-${ARCH} -o "$HOME"/.local/bin/coder
+        chmod +x "$HOME"/.local/bin/coder
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-        $HOME/.local/bin/coder version
+        "$HOME"/.local/bin/coder version
       shell: bash
+      env:
+        CODER_URL: ${{ inputs.access_url }}
 
     - name: Login to Coder
       run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
