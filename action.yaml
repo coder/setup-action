@@ -37,7 +37,11 @@ runs:
         else
           ARCH="amd64"
         fi
-        OS=${{ runner.os | toLower }}
+        if [ "${{ runner.os }}" == "macOS" ]; then
+          OS="darwin"
+        else
+          OS="linux"
+        fi
         curl -fsSL ${{ inputs.access_url }}/bin/coder-${OS}-${ARCH} -o $HOME/.local/bin/coder
         chmod +x $HOME/.local/bin/coder
         echo "$HOME/.local/bin" >> $GITHUB_PATH
