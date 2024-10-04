@@ -16,9 +16,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+    
+      - name: List directory contents
+        run: ls -R
 
       - name: Run Setup Coder Action
         uses: ./action.yaml
         with:
           access_url: ${{ secrets.CODER_URL }}
           coder_session_token: ${{ secrets.CODER_SESSION_TOKEN }}
+
+      - name: Run Coder CLI
+        run: |
+          coder version
+          coder whoami
