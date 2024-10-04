@@ -17,41 +17,44 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Download Coder binary from access URL (Windows)
+    - name: Download and install Coder binary (Windows)
       if: runner.os == 'Windows'
       run: |
-        curl -fsSL ${{ inputs.access_url }}/bin/coder-windows-amd64.exe -o $env:USERPROFILE\AppData\Local\bin\coder.exe
+        if (${{ runner.arch }} -eq "ARM64") {
+          $ARCH = "arm64"
+        } else {
+          $ARCH = "amd64"
+        }
+        curl -fsSL ${{ inputs.access_url }}/bin/coder-windows-$ARCH.exe -o $env:USERPROFILE\AppData\Local\bin\coder.exe
         echo "$env:USERPROFILE\AppData\Local\bin" >> $GITHUB_PATH
       shell: pwsh
 
-    - name: Download Coder binary from access URL (Linux)
-      if: runner.os == 'Linux'
+    - name: Download and install Coder binary (Linux/macOS)
+      if: runner.os != 'Windows'
       run: |
-        if [[ "$RUNNER_ARCH" == "ARM64" ]]; then
+        if [ "${{ runner.arch }}" == "ARM64" ]; then
           ARCH="arm64"
         else
           ARCH="amd64"
         fi
-        curl -fsSL ${{ inputs.access_url }}/bin/coder-linux-$ARCH -o $HOME/.local/bin/coder
+        OS=${{ runner.os | toLower }}
+        curl -fsSL ${{ inputs.access_url }}/bin/coder-${OS}-${ARCH} -o $HOME/.local/bin/coder
         chmod +x $HOME/.local/bin/coder
         echo "$HOME/.local/bin" >> $GITHUB_PATH
       shell: bash
 
-    - name: Download Coder binary from access URL (macOS)
-      if: runner.os == 'macOS'
-      run: |
-        if [[ "$RUNNER_ARCH" == "ARM64" ]]; then
-          ARCH="arm64"
-        else
-          ARCH="amd64"
-        fi
-        curl -fsSL ${{ inputs.access_url }}/bin/coder-darwin-$ARCH -o $HOME/.local/bin/coder
-        chmod +x $HOME/.local/bin/coder
-      shell: bash
-
-    - name: Login to Coder
-      shell: bash
+    - name: Login to Coder (Windows)
+      if: runner.os == 'Windows'
       run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
+      shell: pwsh
+      env:
+        CODER_URL: ${{ inputs.access_url }}
+        CODER_SESSION_TOKEN: ${{ inputs.coder_session_token }}
+
+    - name: Login to Coder (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
+      shell: bash
       env:
         CODER_URL: ${{ inputs.access_url }}
         CODER_SESSION_TOKEN: ${{ inputs.coder_session_token }}
