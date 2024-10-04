@@ -17,15 +17,41 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Download Coder binary from access URL
-      run: curl -fsSL $CODER_URL/bin/coder-linux-amd64 -o /usr/local/bin/coder && chmod +x /usr/local/bin/coder
+    - name: Download Coder binary from access URL (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        curl -fsSL ${{ inputs.access_url }}/bin/coder-windows-amd64.exe -o $env:USERPROFILE\AppData\Local\bin\coder.exe
+        echo "$env:USERPROFILE\AppData\Local\bin" >> $GITHUB_PATH
+      shell: pwsh
+
+    - name: Download Coder binary from access URL (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        if [[ "$RUNNER_ARCH" == "ARM64" ]]; then
+          ARCH="arm64"
+        else
+          ARCH="amd64"
+        fi
+        curl -fsSL ${{ inputs.access_url }}/bin/coder-linux-$ARCH -o $HOME/.local/bin/coder
+        chmod +x $HOME/.local/bin/coder
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
       shell: bash
-      env:
-        CODER_URL: ${{ inputs.access_url }}
+
+    - name: Download Coder binary from access URL (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        if [[ "$RUNNER_ARCH" == "ARM64" ]]; then
+          ARCH="arm64"
+        else
+          ARCH="amd64"
+        fi
+        curl -fsSL ${{ inputs.access_url }}/bin/coder-darwin-$ARCH -o $HOME/.local/bin/coder
+        chmod +x $HOME/.local/bin/coder
+      shell: bash
 
     - name: Login to Coder
-      run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
       shell: bash
+      run: coder login --token $CODER_SESSION_TOKEN $CODER_URL
       env:
         CODER_URL: ${{ inputs.access_url }}
         CODER_SESSION_TOKEN: ${{ inputs.coder_session_token }}
