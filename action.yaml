@@ -24,7 +24,7 @@ runs:
         else
           ARCH="amd64"
         fi
-        mkdir -p $HOME/.local/bin
+        mkdir -p "$HOME"/.local/bin
         curl -fsSL ${{ inputs.access_url }}/bin/coder-linux-${ARCH} -o $HOME/.local/bin/coder
         chmod +x $HOME/.local/bin/coder
         echo "$HOME/.local/bin" >> $GITHUB_PATH
