@@ -20,5 +20,5 @@ jobs:
       - name: Run Setup Coder Action
         uses: ./action.yaml
         with:
-          access_url: "https://coder.example.com"
-          coder_session_token: "dummy_token"
+          access_url: ${{ secrets.CODER_URL }}
+          coder_session_token: ${{ secrets.CODER_SESSION_TOKEN }}
