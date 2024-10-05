@@ -17,8 +17,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Download Coder binary from access URL
-      run: curl -fsSL $CODER_URL/bin/coder-linux-amd64 -o /usr/local/bin/coder && chmod +x /usr/local/bin/coder
+    - name: Download and install Coder binary
+      run: |
+        if [ "${{ runner.arch }}" == "ARM64" ]; then
+          ARCH="arm64"
+        else
+          ARCH="amd64"
+        fi
+        mkdir -p "$HOME"/.local/bin
+        curl -fsSL --compressed "$CODER_URL"/bin/coder-linux-${ARCH} -o "$HOME"/.local/bin/coder
+        chmod +x "$HOME"/.local/bin/coder
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        "$HOME"/.local/bin/coder version
       shell: bash
       env:
         CODER_URL: ${{ inputs.access_url }}
